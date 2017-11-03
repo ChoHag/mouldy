@@ -1,0 +1,36 @@
+My Opinionated Unix & Linux Distribution
+
+This is, maybe, going to become a distribution of unix & linux for
+building atop of. It consists of the kernel of your choice, a C library,
+compiler and binary utils. The ultimate goal is remove all of the GNU
+components. MOULD is not GNU.
+
+If anyone can think of what the Y can stand for then please let me know.
+
+
+You will need:
+
+A working unix environment. This was initially developed from within
+Debian 9.2.
+
+GCC 4.2.1 sources (patched).
+
+Binutils 2.29 sources.
+
+musl (tested with v1.1.18).
+
+GNU make 4.2 sources.
+
+Disc space and patience. I count 2.5GB uncompressed after the build
+completed and 45 minutes on my shitty little laptop.
+
+Knowledge and common sense.
+
+
+Build instructions:
+
+Modify build to your liking and run it. If everything works then
+'yes | build' will create a directory 'fs-x86_64' in your home
+directory containing the build & compilation parts of mould's root
+filesystem. If it doesn't all work then fix it and try again.
+

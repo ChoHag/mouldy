@@ -1,0 +1,39 @@
+Just terrible.
+
+diff --git a/gcc/toplev.h b/gcc/toplev.h
+index c935f7e..d26ca9a 100644
+--- a/gcc/toplev.h
++++ b/gcc/toplev.h
+@@ -157,32 +157,6 @@ extern int exact_log2                  (unsigned HOST_WIDE_INT);
+ /* Return floor of log2, with -1 for zero.  */
+ extern int floor_log2                  (unsigned HOST_WIDE_INT);
+ 
+-/* Inline versions of the above for speed.  */
+-#if GCC_VERSION >= 3004
+-# if HOST_BITS_PER_WIDE_INT == HOST_BITS_PER_LONG
+-#  define CLZ_HWI __builtin_clzl
+-#  define CTZ_HWI __builtin_ctzl
+-# elif HOST_BITS_PER_WIDE_INT == HOST_BITS_PER_LONGLONG
+-#  define CLZ_HWI __builtin_clzll
+-#  define CTZ_HWI __builtin_ctzll
+-# else
+-#  define CLZ_HWI __builtin_clz
+-#  define CTZ_HWI __builtin_ctz
+-# endif
+-
+-extern inline int
+-floor_log2 (unsigned HOST_WIDE_INT x)
+-{
+-  return x ? HOST_BITS_PER_WIDE_INT - 1 - (int) CLZ_HWI (x) : -1;
+-}
+-
+-extern inline int
+-exact_log2 (unsigned HOST_WIDE_INT x)
+-{
+-  return x == (x & -x) && x ? (int) CTZ_HWI (x) : -1;
+-}
+-#endif /* GCC_VERSION >= 3004 */
+-
+ /* Functions used to get and set GCC's notion of in what directory
+    compilation was started.  */
+ 

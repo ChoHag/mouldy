@@ -1,0 +1,199 @@
+#!/bin/sh
+
+set -e
+
+# TODO:
+#   Get rid of $arch, make $target the config variable
+#   Make arm work
+#   Remove useless crap from cross-compiler environment & strip it
+#   Try to decipher some of the autohell incantations and remove useless stuff
+#   Work out whether musl's configure needs CC=
+#   Discover rather than hard-code $builder
+#   Determine the name of the musl linker binary
+
+arch=${1:-x86_64}
+
+# Don't use spaces in these, idiot.
+: ${xdir:=$HOME/cross-$arch}
+: ${xobjdir:=$HOME/build-cross-$arch}
+: ${fsdir:=$HOME/fs-$arch}
+: ${fsobjdir:=$HOME/build-fs-$arch}
+
+builder=x86_64-linux-gnu # How to discover?
+target=$arch-linux-musl
+[ $arch = arm ] && target=${target}eapi
+src_binutils=$HOME/binutils-2.29
+src_gcc=$HOME/gcc-4.2.1
+src_musl=$HOME/musl
+src_make=$HOME/make-4.2
+
+export PATH=$xdir/bin:$PATH
+
+engit() { dir=$1; shift; cd $dir; git add .; git commit -m "$1"; }
+
+if mkdir $xdir; then
+  cd $xdir
+  git init
+  rm -f $xdir/usr && ln -s . $xdir/usr
+  engit $xdir "Empty filesystem"
+fi
+if mkdir $fsdir; then
+  cd $fsdir
+  git init
+  rm -f $fsdir/usr && ln -s . $fsdir/usr
+  engit $fsdir "Empty filesystem"
+fi
+
+
+# Cross-compiler
+
+read -p "Binutils? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $xobjdir/binutils
+  cd $xobjdir/binutils
+  $src_binutils/configure --target=$target --with-sysroot=$xdir --prefix=/ \
+    --disable-nls
+  make
+  make DESTDIR=$xdir install
+  engit $xdir "Binutils"
+fi
+
+# I don't know why this is done in two stages. Cargo cult FTW!
+read -p "GCC stage 1? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $xobjdir/cc-1
+  cd $xobjdir/cc-1
+  $src_gcc/configure --target=$target --with-sysroot=$xdir --prefix=/ \
+    --enable-languages=c    \
+    --disable-decimal-float \
+    --disable-libatomic     \
+    --disable-libgomp       \
+    --disable-libmudflap    \
+    --disable-libnls        \
+    --disable-libquadmath   \
+    --disable-libssp        \
+    --disable-multilib      \
+    --with-multilib-list=   \
+    --disable-nls           \
+    --disable-shared        \
+    --disable-threads       \
+    --with-newlib
+  make
+  make DESTDIR=$xdir install
+  ln -sf $target-gcc $xdir/bin/$target-cc
+  engit $xdir "GCC stage 1"
+fi
+
+read -p "musl? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $xobjdir/musl
+  cd $xobjdir/musl
+  $src_musl/configure --enable-optimize CROSS_COMPILE=$target- CC=$target-gcc --prefix=/
+  make
+  make DESTDIR=$xdir install
+  engit $xdir "musl"
+fi
+
+read -p "GCC stage 2? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $xobjdir/cc-2
+  cd $xobjdir/cc-2
+  $src_gcc/configure --target=$target --with-sysroot=$xdir --prefix=/ \
+    --enable-languages=c   \
+    --disable-libmudflap   \
+    --disable-libnls       \
+    --disable-libsanitizer \
+    --disable-multilib     \
+    --with-multilib-list=  \
+    --disable-nls
+  make
+  make DESTDIR=$xdir install
+  engit $xdir "GCC stage 2"
+fi
+
+
+# Root fs
+
+read -p "rootfs musl? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $fsobjdir/musl
+  cd $fsobjdir/musl
+  # Doesn't need CC=?
+  $src_musl/configure      \
+    CROSS_COMPILE=$target- \
+    CC=$target-gcc         \
+    --prefix=/             \
+    --enable-optimize
+  make
+  make DESTDIR=$fsdir install
+  # Make absolute link relative
+  ln -sf libc.so $fsdir/lib/ld-musl-*.so.1 # Name might be too hard-coded. How to discover?
+  engit $fsdir "musl"
+fi
+
+read -p "rootfs binutils? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $fsobjdir/binutils
+  cd $fsobjdir/binutils
+  # --builder: The arch _this_ build process is running on (calculated)
+  # --host: The arch on which the tools will run
+  # --target: The arch which the tools will create binaries for
+  $src_binutils/configure            \
+    --host=$target --target=$target  \
+    --prefix=/ --with-sysroot=$fsdir \
+    --disable-nls
+  make configure-host
+  make LDFLAGS=-all-static
+  make DESTDIR=$fsdir install-strip
+  engit $fsdir "Binutils"
+fi
+
+read -p "rootfs gcc? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $fsobjdir/cc
+  cd $fsobjdir/cc
+  # --builder: The arch _this_ build process is running on (calculated)
+  # --host: The arch on which the tools will run
+  # --target: The arch which the tools will create binaries for
+  # God knows why this needs --build and binutils doesn't.
+  $src_gcc/configure                \
+    --build=$builder                \
+    --host=$target --target=$target \
+    --prefix=/                      \
+    --with-sysroot=/                \
+    --with-build-sysroot=$fsdir     \
+    --enable-languages=c            \
+    --disable-libmudflap            \
+    --disable-libsanitizer          \
+    --disable-multilib              \
+    --with-multilib-list=           \
+    --disable-nls                   \
+    --enable-deterministic-archives
+  make configure-host
+  make LDFLAGS=-static
+  make DESTDIR=$fsdir install
+  ln -sf gcc $fsdir/bin/cc
+  $xdir/bin/$target-strip                     \
+    $fsdir/bin/cpp                            \
+    $fsdir/bin/*gcc                           \
+    $fsdir/bin/gcov                           \
+    $fsdir/libexec/gcc/$target/4.2.1/cc1      \
+    $fsdir/libexec/gcc/$target/4.2.1/collect2 \
+    $fsdir/libexec/gcc/$target/4.2.1/install-tools/fixincl
+  engit $fsdir "GCC"
+fi
+
+read -p "rootfs make? " nothing || exit 1
+if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
+  mkdir -p $fsobjdir/make
+  cd $fsobjdir/make
+  /home/bob/make-4.2/configure \
+    --host=$target             \
+    --prefix=/                 \
+    --disable-nls              \
+    --without-guile
+  make LDFLAGS=-static
+  make DESTDIR=$fsdir install-strip
+  engit $fsdir "Make"
+fi
+

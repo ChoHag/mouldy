@@ -1,0 +1,26 @@
+This one might not be needed but I was angry with such ineptitude.
+
+diff --git a/gcc/doc/install.texi2html b/gcc/doc/install.texi2html
+index 44da873..87e0a27 100755
+--- a/gcc/doc/install.texi2html
++++ b/gcc/doc/install.texi2html
+@@ -14,6 +14,19 @@
+ 
+ set -e
+ 
++cat <<EOF
++GNU's definitely not fucking unix. This distribution fell at the first
++hurdle with its inability to build it's own fucking documentation.
++
++Converting this directory of shitpiles doesn't work. But apparently
++that's progress. Or something. If you want to try anyway then set
++\$TRY_ANYWAY in the environment and re-run this script.
++
++Fuck GNU.
++EOF
++
++test -z "$TRY_ANYWAY" && exit 1
++
+ SOURCEDIR=${SOURCEDIR-.}
+ DESTDIR=${DESTDIR-HTML}
+ 
