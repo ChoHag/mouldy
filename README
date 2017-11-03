@@ -34,3 +34,13 @@ Modify build to your liking and run it. If everything works then
 directory containing the build & compilation parts of mould's root
 filesystem. If it doesn't all work then fix it and try again.
 
+
+License:
+
+Everything herein that's mine is free software and may be distributed
+under the terms of the Do What the Fuck You Want To Public License
+version 2 or, at your option, any version of any license you choose.
+
+I have no idea what license the files under patches are and I don't
+care. It's probably some GPL variant or other.
+
