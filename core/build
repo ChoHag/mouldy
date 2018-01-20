@@ -6,10 +6,13 @@ set -e
 #   Get rid of $arch, make $target the config variable
 #   Make arm work
 #   Remove useless crap from cross-compiler environment & strip it
+#   Remove useless crap from final root fs
 #   Try to decipher some of the autohell incantations and remove useless stuff
 #   Work out whether musl's configure needs CC=
 #   Discover rather than hard-code $builder
 #   Determine the name of the musl linker binary
+#   Enable nls in root fs
+#   Select a better make, rename make to gmake (should gmake be optional?)
 
 arch=${1:-x86_64}
 
@@ -51,7 +54,10 @@ read -p "Binutils? " nothing || exit 1
 if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
   mkdir -p $xobjdir/binutils
   cd $xobjdir/binutils
-  $src_binutils/configure --target=$target --with-sysroot=$xdir --prefix=/ \
+  $src_binutils/configure \
+    --target=$target      \
+    --with-sysroot=$xdir  \
+    --prefix=/            \
     --disable-nls
   make
   make DESTDIR=$xdir install
@@ -63,7 +69,10 @@ read -p "GCC stage 1? " nothing || exit 1
 if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
   mkdir -p $xobjdir/cc-1
   cd $xobjdir/cc-1
-  $src_gcc/configure --target=$target --with-sysroot=$xdir --prefix=/ \
+  $src_gcc/configure        \
+    --target=$target        \
+    --with-sysroot=$xdir    \
+    --prefix=/              \
     --enable-languages=c    \
     --disable-decimal-float \
     --disable-libatomic     \
@@ -98,7 +107,10 @@ read -p "GCC stage 2? " nothing || exit 1
 if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
   mkdir -p $xobjdir/cc-2
   cd $xobjdir/cc-2
-  $src_gcc/configure --target=$target --with-sysroot=$xdir --prefix=/ \
+  $src_gcc/configure       \
+    --target=$target       \
+    --with-sysroot=$xdir   \
+    --prefix=/             \
     --enable-languages=c   \
     --disable-libmudflap   \
     --disable-libnls       \
@@ -138,9 +150,11 @@ if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
   # --builder: The arch _this_ build process is running on (calculated)
   # --host: The arch on which the tools will run
   # --target: The arch which the tools will create binaries for
-  $src_binutils/configure            \
-    --host=$target --target=$target  \
-    --prefix=/ --with-sysroot=$fsdir \
+  $src_binutils/configure \
+    --host=$target        \
+    --target=$target      \
+    --prefix=/            \
+    --with-sysroot=$fsdir \
     --disable-nls
   make configure-host
   make LDFLAGS=-all-static
@@ -156,18 +170,19 @@ if [ -z "$nothing" -o "${nothing%es}" = y -o "${nothing%ES}" = Y ]; then
   # --host: The arch on which the tools will run
   # --target: The arch which the tools will create binaries for
   # God knows why this needs --build and binutils doesn't.
-  $src_gcc/configure                \
-    --build=$builder                \
-    --host=$target --target=$target \
-    --prefix=/                      \
-    --with-sysroot=/                \
-    --with-build-sysroot=$fsdir     \
-    --enable-languages=c            \
-    --disable-libmudflap            \
-    --disable-libsanitizer          \
-    --disable-multilib              \
-    --with-multilib-list=           \
-    --disable-nls                   \
+  $src_gcc/configure            \
+    --build=$builder            \
+    --host=$target              \
+    --target=$target            \
+    --prefix=/                  \
+    --with-sysroot=/            \
+    --with-build-sysroot=$fsdir \
+    --enable-languages=c        \
+    --disable-libmudflap        \
+    --disable-libsanitizer      \
+    --disable-multilib          \
+    --with-multilib-list=       \
+    --disable-nls               \
     --enable-deterministic-archives
   make configure-host
   make LDFLAGS=-static
