@@ -66,13 +66,13 @@
 #include <sys/cdefs_aout.h>
 #endif
 
-#ifdef __GNUC__
-#define	__strict_weak_alias(alias,sym)					\
-	__unused static __typeof__(alias) *__weak_alias_##alias = &sym;	\
-	__weak_alias(alias,sym)
-#else
-#define	__strict_weak_alias(alias,sym) __weak_alias(alias,sym)
-#endif
+//#ifdef __GNUC__
+//#define	__strict_weak_alias(alias,sym)                          \
+//	__unused static __typeof__(alias) *__weak_alias_##alias = &sym;	\
+//	__weak_alias(alias,sym)
+//#else
+//#define	__strict_weak_alias(alias,sym) __weak_alias(alias,sym)
+//#endif
 
 /*
  * Optional marker for size-optimised MD calling convention.
@@ -258,41 +258,41 @@
 /*
  * __unused: Note that item or function might be unused.
  */
-#if __GNUC_PREREQ__(2, 7) || defined(__lint__)
-#define	__unused	__attribute__((__unused__))
-#else
-#define	__unused	/* delete */
-#endif
+//#if __GNUC_PREREQ__(2, 7) || defined(__lint__)
+//#define	__unused	__attribute__((__unused__))
+//#else
+//#define	__unused	/* delete */
+//#endif
 
 /*
  * __used: Note that item is needed, even if it appears to be unused.
  */
-#if __GNUC_PREREQ__(3, 1)
-#define	__used		__attribute__((__used__))
-#else
-#define	__used		__unused
-#endif
+//#if __GNUC_PREREQ__(3, 1)
+//#define	__used		__attribute__((__used__))
+//#else
+//#define	__used		__unused
+//#endif
 
 /*
  * __diagused: Note that item is used in diagnostic code, but may be
  * unused in non-diagnostic code.
  */
-#if (defined(_KERNEL) && defined(DIAGNOSTIC)) \
- || (!defined(_KERNEL) && !defined(NDEBUG))
-#define	__diagused	/* empty */
-#else
-#define	__diagused	__unused
-#endif
+//#if (defined(_KERNEL) && defined(DIAGNOSTIC)) \
+// || (!defined(_KERNEL) && !defined(NDEBUG))
+//#define	__diagused	/* empty */
+//#else
+//#define	__diagused	__unused
+//#endif
 
 /*
  * __debugused: Note that item is used in debug code, but may be
  * unused in non-debug code.
  */
-#if defined(DEBUG)
-#define	__debugused	/* empty */
-#else
-#define	__debugused	__unused
-#endif
+//#if defined(DEBUG)
+//#define	__debugused	/* empty */
+//#else
+//#define	__debugused	__unused
+//#endif
 
 #if __GNUC_PREREQ__(3, 1)
 #define	__noprofile	__attribute__((__no_instrument_function__))

@@ -2,10 +2,6 @@
 
 #include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: tty.c,v 1.8 2017/06/30 03:56:12 kamil Exp $");
-#endif
-
 #include <sys/stat.h>
 
 #include "sh.h"

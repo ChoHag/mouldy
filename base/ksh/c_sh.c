@@ -3,11 +3,8 @@
 /*
  * built-in Bourne commands
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: c_sh.c,v 1.22 2017/06/30 03:56:12 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -822,9 +819,9 @@ clocktos(t)
 	/* note: posix says must use max precision, ie, if clk_tck is
 	 * 1000, must print 3 places after decimal (if non-zero, else 1).
 	 */
-	if (CLK_TCK != 100)	/* convert to 1/100'ths */
-	    t = (t < (clock_t)(1000000000/CLK_TCK)) ?
-		    (t * 100) / CLK_TCK : (t / CLK_TCK) * 100;
+	if (CLOCKS_PER_SEC != 100)	/* convert to 1/100'ths */
+	    t = (t < (clock_t)(1000000000/CLOCKS_PER_SEC)) ?
+		    (t * 100) / CLOCKS_PER_SEC : (t / CLOCKS_PER_SEC) * 100;
 
 	*--cp = '\0';
 	for (i = -2; i <= 0 || t > 0; i++) {

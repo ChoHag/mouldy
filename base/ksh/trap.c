@@ -3,11 +3,8 @@
 /*
  * signal handling
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: trap.c,v 1.12 2017/06/23 00:00:58 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include "sh.h"
 

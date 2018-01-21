@@ -1,9 +1,6 @@
 /*	$NetBSD: path.c,v 1.12 2017/06/22 14:20:46 kamil Exp $	*/
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: path.c,v 1.12 2017/06/22 14:20:46 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 

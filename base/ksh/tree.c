@@ -3,12 +3,8 @@
 /*
  * command tree climbing
  */
+
 #include <sys/cdefs.h>
-
-#ifndef lint
-__RCSID("$NetBSD: tree.c,v 1.7 2017/06/23 00:18:01 kamil Exp $");
-#endif
-
 
 #include "sh.h"
 

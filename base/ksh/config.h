@@ -25,7 +25,7 @@
 #define RETSIGTYPE void
 
 /* Define if `sys_siglist' is declared by <signal.h>.  */
-#define SYS_SIGLIST_DECLARED 1
+/* #undef SYS_SIGLIST_DECLARED */
 
 /* Define as the return value of signal handlers (0 or ).  */
 #define RETSIGVAL 
@@ -52,7 +52,7 @@
 #define SYS_ERRLIST_DECLARED 1
 
 /* Define if sys_siglist[] is in the C library */
-#define HAVE_SYS_SIGLIST 1
+/* #undef HAVE_SYS_SIGLIST */
 
 /* Define if you have a sane <termios.h> header file */
 #define HAVE_TERMIOS_H 1

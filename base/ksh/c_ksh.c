@@ -3,11 +3,8 @@
 /*
  * built-in Korn commands: c_*
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: c_ksh.c,v 1.25 2017/06/30 03:56:12 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 #include <ctype.h>

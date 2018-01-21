@@ -4,11 +4,8 @@
  * Mailbox checking code by Robert J. Gibson, adapted for PD ksh by
  * John R. MacMillan
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: mail.c,v 1.7 2017/06/30 03:56:12 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include "config.h"
 

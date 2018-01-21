@@ -8,11 +8,8 @@
  * modified by Michael Rendell to add Korn's [[ .. ]] expressions.
  * modified by J.T. Conklin to add POSIX compatibility.
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: c_test.c,v 1.8 2017/06/30 04:11:57 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 

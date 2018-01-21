@@ -29,7 +29,6 @@
  * area-based allocation built on malloc/free
  */
 #include <sys/cdefs.h>
-__RCSID("$NetBSD$");
 
 #include "sh.h"
 

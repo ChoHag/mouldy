@@ -3,12 +3,8 @@
 /*
  * Miscellaneous functions
  */
+
 #include <sys/cdefs.h>
-
-#ifndef lint
-__RCSID("$NetBSD: misc.c,v 1.22 2017/06/22 23:38:49 kamil Exp $");
-#endif
-
 
 #include "sh.h"
 #include <ctype.h>	/* for FILECHCONV */

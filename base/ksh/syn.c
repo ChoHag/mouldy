@@ -3,12 +3,8 @@
 /*
  * shell parser (C version)
  */
+
 #include <sys/cdefs.h>
-
-#ifndef lint
-__RCSID("$NetBSD: syn.c,v 1.9 2006/10/16 00:07:32 christos Exp $");
-#endif
-
 
 #include "sh.h"
 #include "c_test.h"

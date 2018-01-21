@@ -16,12 +16,10 @@
  *		things. You need to have the mmap system call for this
  *		to work on your system
  */
+
 #include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: history.c,v 1.17 2017/06/30 04:41:19 kamil Exp $");
-#endif
-
+#include <sys/file.h>
 #include <sys/stat.h>
 
 #include "sh.h"
@@ -753,8 +751,9 @@ hist_finish()
   else
     hp = histlist;
 
-  if ((fd = open(hname, O_WRONLY | O_CREAT | O_TRUNC | O_EXLOCK, 0600)) != -1) {
+  if ((fd = open(hname, O_WRONLY | O_CREAT | O_TRUNC, 0600)) != -1) {
     /* Remove anything written before we got the lock */
+    flock(fd, LOCK_EX);
     ftruncate(fd, 0);
     if ((fh = fdopen(fd, "w")) != NULL) {
       for (i = 0; hp + i <= histptr && hp[i]; i++)

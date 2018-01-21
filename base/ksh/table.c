@@ -3,12 +3,8 @@
 /*
  * dynamic hashed associative table for commands and variables
  */
+
 #include <sys/cdefs.h>
-
-#ifndef lint
-__RCSID("$NetBSD$");
-#endif
-
 
 #include "sh.h"
 

@@ -3,11 +3,8 @@
 /*
  * shell buffered IO and formatted output
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: io.c,v 1.16 2017/06/30 03:56:12 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 #include <ctype.h>

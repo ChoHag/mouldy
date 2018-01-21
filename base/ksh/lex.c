@@ -3,12 +3,8 @@
 /*
  * lexical analysis and source input
  */
+
 #include <sys/cdefs.h>
-
-#ifndef lint
-__RCSID("$NetBSD: lex.c,v 1.20 2017/06/30 02:51:14 kamil Exp $");
-#endif
-
 
 #include "sh.h"
 #include <ctype.h>

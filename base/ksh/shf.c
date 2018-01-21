@@ -3,11 +3,8 @@
 /*
  *  Shell file I/O routines
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: shf.c,v 1.12 2017/06/30 02:51:14 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 

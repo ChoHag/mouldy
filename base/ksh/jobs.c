@@ -18,11 +18,8 @@
  *	  process groups
  *	- NEED_PGRP_SYNC defined iff JOBS is defined - see comment below
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: jobs.c,v 1.18 2017/06/30 03:56:12 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 #include <sys/times.h>

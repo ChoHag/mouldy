@@ -2,10 +2,6 @@
 
 #include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: var.c,v 1.20 2017/06/30 04:41:19 kamil Exp $");
-#endif
-
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <time.h>

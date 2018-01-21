@@ -3,11 +3,8 @@
 /*
  * execute command tree
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: exec.c,v 1.23 2017/06/30 04:41:19 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 #include <ctype.h>

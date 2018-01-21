@@ -3,11 +3,8 @@
 /*
  * Expansion - quoting, separation, substitution, globbing
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: eval.c,v 1.21 2017/06/30 03:56:12 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <sys/stat.h>
 #include <stdint.h>

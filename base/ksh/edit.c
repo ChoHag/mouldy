@@ -4,11 +4,8 @@
  * Command line editing - common code
  *
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: edit.c,v 1.33 2017/06/30 05:18:36 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include <stdbool.h>
 

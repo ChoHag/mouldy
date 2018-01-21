@@ -6,11 +6,8 @@
  *	bludgeoned to fit pdksh by Larry Bouzane, Jeff Sparkes & Eric Gisin
  *
  */
-#include <sys/cdefs.h>
 
-#ifndef lint
-__RCSID("$NetBSD: vi.c,v 1.17 2017/06/30 03:56:12 kamil Exp $");
-#endif
+#include <sys/cdefs.h>
 
 #include "config.h"
 #ifdef VI
