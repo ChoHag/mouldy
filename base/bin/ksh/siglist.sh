@@ -9,6 +9,7 @@ set -e
 
 : ${AWK:=awk}
 : ${SED:=sed}
+# Also grep, sort, tr, rm
 
 in=tmpi$$.c
 out=tmpo$$.c

@@ -1,0 +1,47 @@
+# Standard header
+sp              := $(sp).x
+dirstack_$(sp)  := $(here)
+here            := $(dir)
+
+
+# No subdirectories
+
+
+# Local rules
+
+BIN_$(here) := $(here)/chgrp
+# No LIB_$(here)
+OBJ_$(here) :=
+DEP_$(here) := $(BIN_$(here):%=%.d)
+DIRT_$(here):= $(BIN_$(here)) $(LIB_$(here)) $(OBJ_$(here)) $(DEP_$(here))
+
+ALL_BIN     := $(ALL_BIN) $(BIN_$(here))
+# ALL_LIB none
+# ALL_INC none
+ALL_INSTALL := $(ALL_INSTALL) $(here)/INSTALL
+ALL_CLEAN   := $(ALL_CLEAN) $(here)/CLEAN
+
+
+$(OBJ_$(here)): $(here)/Makefile.dir
+
+# TODO: Use INC_libutil & LIB_libutil or something
+$(BIN_$(here)):  CF_DIR := -Ilib/libutil
+$(BIN_$(here)):  LL_DIR := lib/libutil/libutil.a
+$(BIN_$(here)):  $(here)/chgrp.c lib/libutil/libutil.a
+	$(FULLBUILD)
+
+$(here)/INSTALL: IN_BIN := $(BIN_$(here))
+$(here)/INSTALL: IN_INC := $(INC_$(here))
+$(here)/INSTALL:
+	$(INSTALL)
+
+$(here)/CLEAN: DIRT := $(DIRT_$(here))
+$(here)/CLEAN:
+	$(CLEANHERE)
+
+
+# Standard footer
+.PHONY: $(here)/INSTALL $(here)/CLEAN
+-include $(DEP_$(here))
+here     := $(dirstack_$(sp))
+sp       := $(basename $(sp))

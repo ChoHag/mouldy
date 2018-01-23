@@ -1,0 +1,65 @@
+# Standard header
+sp              := $(sp).x
+dirstack_$(sp)  := $(here)
+here            := $(dir)
+
+
+# No subdirectories
+
+
+# Local rules
+
+# No BIN_$(here)
+LIB_$(here) := $(here)/libutf.a
+OBJ_$(here) :=           \
+  $(here)/fgetrune.o     \
+  $(here)/fputrune.o     \
+  $(here)/isalnumrune.o  \
+  $(here)/isalpharune.o  \
+  $(here)/isblankrune.o  \
+  $(here)/iscntrlrune.o  \
+  $(here)/isdigitrune.o  \
+  $(here)/isgraphrune.o  \
+  $(here)/isprintrune.o  \
+  $(here)/ispunctrune.o  \
+  $(here)/isspacerune.o  \
+  $(here)/istitlerune.o  \
+  $(here)/isxdigitrune.o \
+  $(here)/lowerrune.o    \
+  $(here)/rune.o         \
+  $(here)/runetype.o     \
+  $(here)/upperrune.o    \
+  $(here)/utf.o          \
+  $(here)/utftorunestr.o
+INC_$(here) := \
+  $(here)/utf.h
+DEP_$(here) := $(OBJ_$(here):%=%.d) # += ?
+DIRT_$(here):= $(BIN_$(here)) $(LIB_$(here)) $(OBJ_$(here)) $(DEP_$(here))
+
+# ALL_BIN none
+ALL_LIB     := $(ALL_LIB) $(LIB_$(here))
+ALL_INC     := $(ALL_INC) $(INC_$(here)) # Or something...
+ALL_INSTALL := $(ALL_INSTALL) $(here)/INSTALL
+ALL_CLEAN   := $(ALL_CLEAN) $(here)/CLEAN
+
+$(OBJ_$(here)):   CF_DIR := -I$(here)
+
+$(here)/libutf.a: LL_DIR :=
+$(here)/libutf.a: $(OBJ_$(here))
+	$(ENARCHIVE)
+
+$(here)/INSTALL: IN_LIB := $(LIB_$(here))
+$(here)/INSTALL: IN_INC := $(INC_$(here))
+$(here)/INSTALL:
+	$(INSTALL)
+
+$(here)/CLEAN: DIRT := $(DIRT_$(here))
+$(here)/CLEAN:
+	$(CLEANHERE)
+
+
+# Standard footer
+.PHONY: $(here)/CLEAN
+-include $(DEP_$(here))
+here     := $(dirstack_$(sp))
+sp       := $(basename $(sp))

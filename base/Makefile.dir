@@ -1,0 +1,56 @@
+# Standard things
+
+.SUFFIXES:
+.SUFFIXES:      .c .o
+
+all:            targets
+
+
+# Subdirectories
+
+dir := lib
+include $(dir)/Makefile.dir
+dir := bin
+include $(dir)/Makefile.dir
+
+
+# General directory independent rules
+
+%.o: %.c
+	$(ONLYBUILD)
+
+%:   %.o
+	$(THENLINK)
+
+%:   %.c
+	$(FULLBUILD)
+
+# The variables ALL_* and CLEAN will be added to by the Makefile
+# fragments in the subdirectories.
+
+.PHONY:  targets
+targets: $(ALL_BIN) $(ALL_SBIN) $(ALL_ETC) $(ALL_LIB)
+
+.PHONY:  install install/skeleton
+$(ALL_INSTALL): targets install/skeleton
+install: $(ALL_INSTALL)
+
+install/skeleton:
+	$(mkdir) -p     \
+	  $(TO)/etc     \
+	  $(TO)/bin     \
+	  $(TO)/lib     \
+	  $(TO)/var     \
+	  $(TO)/tmp     \
+	  $(TO)/include
+	$(chmod) 1777 $(TO)/tmp
+	$(test) -e $(TO)/sbin    || $(ln) -sf bin    $(TO)/sbin
+	$(test) -e $(TO)/usr     || $(ln) -sf .      $(TO)/usr
+	$(test) -e $(TO)/var/tmp || $(ln) -sf ../tmp $(TO)/var/tmp
+
+.PHONY:  clean
+clean:   $(ALL_CLEAN)
+
+# Prevent make from removing any build targets, including intermediate ones
+
+#.SECONDARY: $(CLEAN) $(ALL_CLEAN)

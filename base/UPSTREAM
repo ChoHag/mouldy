@@ -1,0 +1,9 @@
+# file type repo [source]
+include/amd64-cdefs.h cvs anoncvs3.de.NetBSD.org:/cvsroot src/sys/arch/amd64/include/cdefs.h
+include/cdefs.h cvs anoncvs3.de.NetBSD.org:/cvsroot src/sys/sys/cdefs.h
+include/cdefs_aout.h cvs anoncvs3.de.NetBSD.org:/cvsroot src/sys/sys/cdefs.h
+include/cdefs_elf.h cvs anoncvs3.de.NetBSD.org:/cvsroot src/sys/sys/cdefs.h
+include/compat.h git http://git.suckless.org/sbase
+lib/* git http://git.suckless.org/sbase
+bin/ksh cvs anoncvs3.de.NetBSD.org:/cvsroot src/bin/ksh
+bin/* git http://git.suckless.org/sbase

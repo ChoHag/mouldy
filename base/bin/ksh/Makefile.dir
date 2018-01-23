@@ -1,0 +1,92 @@
+# Standard header
+sp              := $(sp).x
+dirstack_$(sp)  := $(here)
+here            := $(dir)
+
+
+# No subdirectories
+
+
+# Local rules
+
+BIN_$(here) := $(here)/ksh
+# No LIB_$(here)
+OBJ_$(here) :=       \
+  $(here)/alloc.o    \
+  $(here)/c_ksh.o    \
+  $(here)/c_sh.o     \
+  $(here)/c_test.o   \
+  $(here)/c_ulimit.o \
+  $(here)/edit.o     \
+  $(here)/emacs.o    \
+  $(here)/eval.o     \
+  $(here)/exec.o     \
+  $(here)/expr.o     \
+  $(here)/history.o  \
+  $(here)/io.o       \
+  $(here)/jobs.o     \
+  $(here)/lex.o      \
+  $(here)/mail.o     \
+  $(here)/main.o     \
+  $(here)/misc.o     \
+  $(here)/path.o     \
+  $(here)/shf.o      \
+  $(here)/syn.o      \
+  $(here)/table.o    \
+  $(here)/trap.o     \
+  $(here)/tree.o     \
+  $(here)/tty.o      \
+  $(here)/var.o      \
+  $(here)/version.o  \
+  $(here)/vi.o
+GEN_$(here) :=       \
+  $(here)/emacs-fn.h \
+  $(here)/siglist.h
+DEP_$(here) := $(OBJ_$(here):%=%.d)
+DIRT_$(here):= $(BIN_$(here)) $(LIB_$(here)) $(OBJ_$(here)) $(GEN_$(here)) $(DEP_$(here))
+
+ALL_BIN     := $(ALL_BIN) $(BIN_$(here))
+# ALL_LIB none
+# ALL_INC none
+ALL_INSTALL := $(ALL_INSTALL) $(here)/INSTALL
+ALL_CLEAN   := $(ALL_CLEAN) $(here)/CLEAN
+
+# TODO: How to run shell scripts without a shell?
+
+$(here)/emacs.o: $(here)/emacs-fn.h
+
+$(here)/emacs-fn.h: here := $(here)
+$(here)/emacs-fn.h: $(here)/emacs.c $(here)/emacs-gen.sh
+	$(sh) $(here)/emacs-gen.sh $< > $@
+
+$(here)/trap.o: $(here)/siglist.h
+
+$(here)/siglist.h: here   := $(here)
+$(here)/siglist.h: CF_DIR := -I$(here)
+$(here)/siglist.h: $(here)/siglist.in $(here)/siglist.sh
+	$(sh) $(here)/siglist.sh "$(CC) $(CFLAGS) $(CPPFLAGS) $(CF_DIR) -E" < $< > $@
+
+$(OBJ_$(here)): $(here)/Makefile.dir
+$(GEN_$(here)): $(here)/Makefile.dir
+
+$(BIN_$(here)): CF_DIR := -I$(here)
+$(BIN_$(here)): LL_DIR :=
+$(BIN_$(here)): $(OBJ_$(here))
+	$(THENLINK)
+
+$(here)/INSTALL: IN_BIN := $(BIN_$(here))
+$(here)/INSTALL: IN_INC := $(INC_$(here))
+$(here)/INSTALL:
+	$(INSTALL)
+	$(test) -e $(TO)/bin/sh || $(ln) -sf ksh $(TO)/bin/sh
+
+$(here)/CLEAN: DIRT := $(DIRT_$(here))
+$(here)/CLEAN:
+	$(CLEANHERE)
+
+
+# Standard footer
+.PHONY: $(here)/INSTALL $(here)/CLEAN
+-include $(DEP_$(here))
+here     := $(dirstack_$(sp))
+sp       := $(basename $(sp))

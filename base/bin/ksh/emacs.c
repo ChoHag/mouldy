@@ -147,14 +147,14 @@ static int	x_emacs_putbuf	ARGS((const char *s, size_t len));
 
 
 /* The lines between START-FUNC-TAB .. END-FUNC-TAB are run through a
- * script (emacs-gen.sh) that generates emacs.out which contains:
+ * script (emacs-gen.sh) that generates emacs-fn.h which contains:
  *	- function declarations for x_* functions
  *	- defines of the form XFUNC_<name> where <name> is function
  *	  name, sans leading x_.
  * Note that the script treats #ifdef and { 0, 0, 0} specially - use with
  * caution.
  */
-#include "emacs.out"
+#include "emacs-fn.h"
 static const struct x_ftab x_ftab[] = {
 /* @START-FUNC-TAB@ */
 	{ x_abort,		"abort",			0 },

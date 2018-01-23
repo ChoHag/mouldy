@@ -1,0 +1,83 @@
+# Standard header
+sp              := $(sp).x
+dirstack_$(sp)  := $(here)
+here            := $(dir)
+
+
+# No subdirectories
+
+
+# Local rules
+
+# No BIN_$(here)
+LIB_$(here) := $(here)/libutil.a
+OBJ_$(here) :=           \
+  $(here)/concat.o       \
+  $(here)/cp.o           \
+  $(here)/crypt.o        \
+  $(here)/ealloc.o       \
+  $(here)/enmasse.o      \
+  $(here)/eprintf.o      \
+  $(here)/eregcomp.o     \
+  $(here)/estrtod.o      \
+  $(here)/fnck.o         \
+  $(here)/fshut.o        \
+  $(here)/getlines.o     \
+  $(here)/human.o        \
+  $(here)/linecmp.o      \
+  $(here)/md5.o          \
+  $(here)/memmem.o       \
+  $(here)/mkdirp.o       \
+  $(here)/mode.o         \
+  $(here)/parseoffset.o  \
+  $(here)/putword.o      \
+  $(here)/reallocarray.o \
+  $(here)/recurse.o      \
+  $(here)/rm.o           \
+  $(here)/sha1.o         \
+  $(here)/sha224.o       \
+  $(here)/sha256.o       \
+  $(here)/sha384.o       \
+  $(here)/sha512-224.o   \
+  $(here)/sha512-256.o   \
+  $(here)/sha512.o       \
+  $(here)/strcasestr.o   \
+  $(here)/strlcat.o      \
+  $(here)/strlcpy.o      \
+  $(here)/strsep.o       \
+  $(here)/strtonum.o     \
+  $(here)/unescape.o     \
+  $(here)/writeall.o
+INC_$(here) := \
+  $(here)/util.h
+DEP_$(here) := $(OBJ_$(here):%=%.d) # += ?
+DIRT_$(here):= $(BIN_$(here)) $(LIB_$(here)) $(OBJ_$(here)) $(DEP_$(here))
+
+# ALL_BIN none
+ALL_LIB     := $(ALL_LIB) $(LIB_$(here))
+ALL_INC     := $(ALL_INC) $(INC_$(here))
+ALL_INSTALL := $(ALL_INSTALL) $(here)/INSTALL
+ALL_CLEAN   := $(ALL_CLEAN) $(here)/CLEAN
+
+$(OBJ_$(here)):    CF_DIR := -I$(here)
+#$(OBJ_$(here)): $(INC_$(here)) $(DEP_$(here))
+
+$(here)/libutil.a: LL_DIR :=
+$(here)/libutil.a: $(OBJ_$(here))
+	$(ENARCHIVE)
+
+$(here)/INSTALL: IN_LIB := $(LIB_$(here))
+$(here)/INSTALL: IN_INC := $(INC_$(here))
+$(here)/INSTALL:
+	$(INSTALL)
+
+$(here)/CLEAN: DIRT := $(DIRT_$(here))
+$(here)/CLEAN:
+	$(CLEANHERE)
+
+
+# Standard footer
+.PHONY: $(here)/INSTALL $(here)/CLEAN
+-include $(DEP_$(here))
+here     := $(dirstack_$(sp))
+sp       := $(basename $(sp))

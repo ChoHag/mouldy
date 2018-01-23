@@ -1,0 +1,45 @@
+# Standard header
+sp              := $(sp).x
+dirstack_$(sp)  := $(here)
+here            := $(dir)
+
+
+# Subdirectories
+
+# Loop?
+dir := $(here)/cp
+include $(dir)/Makefile.dir
+dir := $(here)/mv
+include $(dir)/Makefile.dir
+dir := $(here)/rm
+include $(dir)/Makefile.dir
+dir := $(here)/ln
+include $(dir)/Makefile.dir
+dir := $(here)/mkdir
+include $(dir)/Makefile.dir
+dir := $(here)/rmdir
+include $(dir)/Makefile.dir
+
+dir := $(here)/chgrp
+include $(dir)/Makefile.dir
+dir := $(here)/chown
+include $(dir)/Makefile.dir
+dir := $(here)/chmod
+include $(dir)/Makefile.dir
+
+dir := $(here)/ksh
+include $(dir)/Makefile.dir
+dir := $(here)/ls
+include $(dir)/Makefile.dir
+dir := $(here)/test
+include $(dir)/Makefile.dir
+
+# others
+
+# No local rules
+
+
+# Standard footer
+-include $(DEP_$(here))
+here     := $(dirstack_$(sp))
+sp       := $(basename $(sp))

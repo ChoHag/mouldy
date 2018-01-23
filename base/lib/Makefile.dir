@@ -1,0 +1,35 @@
+# Standard header
+sp              := $(sp).x
+dirstack_$(sp)  := $(here)
+here            := $(dir)
+
+
+# Subdirectories
+
+dir := $(here)/libutil
+include $(dir)/Makefile.dir
+dir := $(here)/libutf
+include $(dir)/Makefile.dir
+
+
+# No local rules
+
+#OBJ_$(here)    := $(d)/debug.o $(d)/md5.o $(d)/misc.o \
+#                  $(d)/ringbuf.o $(d)/textfile.o $(d)/subprocs.o \
+#                  $(d)/metadata.o $(d)/metatype.o \
+#                  $(d)/metadict.o $(d)/metaops.o
+#DEP_$(here)    := $(OBJ_$(here):%=%.d)
+#
+#CLEAN          := $(CLEAN) $(OBJS_$(d)) $(DEPS_$(d)) \
+#                  $(d)/common.a $(d)/platform.h
+
+#$(OBJ_$(here)):   CF_TGT := -I$(here)
+#
+#$(here)/common.a:  $(OBJ_$(here))
+#	$(ARCH)
+
+
+# Standard footer
+-include $(DEP_$(here))
+here     := $(dirstack_$(sp))
+sp       := $(basename $(sp))
